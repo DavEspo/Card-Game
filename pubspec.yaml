@@ -27,3 +27,11 @@ flutter:
   assets:
     - assets/Card.jpg
     - assets/Back_of_Card.png
+    - assets/Ace_of_Spades.png
+    - assets/7_of_Diamonds.png
+    - assets/Ace_of_Hearts.avif
+    - assets/King_of_Hearts.png
+    - assets/Queen_of_Clover.jpg
+    - assets/4_of_Hearts.jpg
+    - assets/Jack_of_Diamonds.webp
+    - assets/7_of_Spades.jpg

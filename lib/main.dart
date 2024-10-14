@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:math';
 
 void main() => runApp(
   ChangeNotifierProvider(
@@ -22,13 +23,13 @@ class CardMatchingGame extends StatelessWidget {
 }
 
 class CardGrid extends StatelessWidget {
-  final List<CardModel> cards = List.generate(4, (index) => CardModel(index));
+  final List<CardModel> cards = List.generate(16, (index) => CardModel(index));
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: 4,
       ),
       itemCount: cards.length,
       itemBuilder: (context, index) {
@@ -39,16 +40,17 @@ class CardGrid extends StatelessWidget {
 }
 
 class CardModel {
-  final int id;
+  int id;
+  List<int> Id = [0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7];
   bool isFaceUp = false;
-  final String front;
-  final String back = "BACK";
-
-  CardModel(this.id) : front = "CARD $id";
+  List<String> image = ["assets/Ace_of_Spades.png", "assets/7_of_Diamonds.png", "assets/Ace_of_Hearts.avif", "assets/King_of_Hearts.png",
+                        "assets/Queen_of_Clover.jpg", "assets/4_of_Hearts.jpg", "assets/Jack_of_Diamonds.webp", "assets/7_of_Spades.jpg"];
+  int len = 2;
+  CardModel(this.id);
 }
 
 class GameState extends ChangeNotifier {
-  List<CardModel> cards = List.generate(4, (index) => CardModel(index));
+  List<CardModel> cards = List.generate(16, (index) => CardModel(index));
   List<CardModel> faceUpCards = [];
   int pairsMatched = 0;
 
@@ -60,21 +62,22 @@ class GameState extends ChangeNotifier {
     notifyListeners();
 
     if (faceUpCards.length == 2) {
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(Duration(milliseconds: 500), () {
         checkMatch();
       });
     }
   }
 
   void checkMatch() {
-    if (faceUpCards[0].id != faceUpCards[1].id) {
+    if (faceUpCards[0].Id[faceUpCards[0].id] != faceUpCards[1].Id[faceUpCards[1].id]) {
       faceUpCards[0].isFaceUp = false;
       faceUpCards[1].isFaceUp = false;
     } else {
       pairsMatched++;
-      if (pairsMatched == cards.length ~/ 2) {
+      if (pairsMatched == cards.length ~/ 8) {
         // Display victory message
         notifyListeners();
+        Text("You won");
       }
     }
     faceUpCards.clear();
@@ -99,11 +102,8 @@ class CardWidget extends StatelessWidget {
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         decoration: BoxDecoration(
-          image: card.isFaceUp ? DecorationImage(image: AssetImage('assets/Card.jpg')) : DecorationImage(image: AssetImage('assets/Back_of_Card.png')),
+          image: card.isFaceUp ? DecorationImage(image: AssetImage(card.image[card.Id[card.id]])) : DecorationImage(image: AssetImage('assets/Back_of_Card.png')),
           borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Center(
-          child: Text(card.isFaceUp ? card.front : card.back),
         ),
       ),
     );
